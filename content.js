@@ -40,24 +40,18 @@ function startBulkDelete() {
 }
 
 function bulkDeleteDMs() {
-  // DM satırlarını bul
-  const chatRows = document.querySelectorAll(
-    'div[aria-label="Chats"] [role="button"][tabindex="0"]'
-  );
-  if (!chatRows.length) {
-    alert("Silinecek DM bulunamadı veya DM kutusu yüklenmedi.");
-    return;
-  }
-  let i = 0;
   function deleteNext() {
-    if (i >= chatRows.length) {
+    // Her seferinde güncel DM listesini al
+    const chatRows = document.querySelectorAll(
+      'div[aria-label="Chats"] [role="button"][tabindex="0"]'
+    );
+    if (!chatRows.length) {
       alert("Tüm DM'ler silindi veya silinecek başka sohbet kalmadı!");
       return;
     }
-    const chat = chatRows[i];
+    const chat = chatRows[0];
     chat.click();
     setTimeout(() => {
-      // 1. Adım: Konuşma Bilgileri (i) butonunu bul ve tıkla
       const infoBtn = Array.from(
         document.querySelectorAll(
           'div[role="button"][tabindex="0"] svg[aria-label="Konuşma Bilgileri"]'
@@ -66,35 +60,30 @@ function bulkDeleteDMs() {
       if (infoBtn) {
         infoBtn.click();
         setTimeout(() => {
-          // 2. Adım: Sohbeti sil butonunu bul ve tıkla
           const deleteBtn = Array.from(document.querySelectorAll("span")).find(
             (el) => el.textContent.trim() === "Sohbeti sil"
           );
           if (deleteBtn) {
             deleteBtn.closest('div[role="button"]').click();
             setTimeout(() => {
-              // 3. Adım: Onay popup'ında Sil butonunu bul ve tıkla
               const confirmBtn = Array.from(
                 document.querySelectorAll('div[role="dialog"] button')
               ).find((el) => el.textContent.trim() === "Sil");
               if (confirmBtn) {
                 confirmBtn.click();
                 setTimeout(() => {
-                  i++;
+                  // Burada tekrar deleteNext çağrılır, böylece güncel DM listesiyle devam eder
                   deleteNext();
                 }, 2000);
               } else {
-                i++;
                 deleteNext();
               }
             }, 800);
           } else {
-            i++;
             deleteNext();
           }
         }, 800);
       } else {
-        i++;
         deleteNext();
       }
     }, 800);
