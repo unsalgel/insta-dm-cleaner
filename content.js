@@ -1,0 +1,106 @@
+// Instagram DM toplu silici
+
+function addBulkDeleteButton() {
+  // Sadece DM sayfasında çalışsın
+  if (!window.location.pathname.startsWith("/direct/inbox")) return;
+  if (document.querySelector("#bulk-delete-dm-btn")) return;
+
+  // DM listesinin üstüne ekle
+  const dmList = document.querySelector('div[aria-label="Chats"]');
+  if (!dmList) return;
+
+  const btn = document.createElement("button");
+  btn.id = "bulk-delete-dm-btn";
+  btn.innerText = "Tüm DM'leri Sil";
+  btn.style.cssText = `
+        background: #ed4956;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 18px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 10px 0 10px 10px;
+        z-index: 9999;
+        display: block;
+    `;
+  btn.onclick = startBulkDelete;
+  dmList.prepend(btn);
+}
+
+function startBulkDelete() {
+  if (
+    !confirm(
+      "Tüm DM'ler silinecek. Devam etmek istiyor musunuz? Bu işlem geri alınamaz!"
+    )
+  )
+    return;
+  bulkDeleteDMs();
+}
+
+function bulkDeleteDMs() {
+  // DM satırlarını bul
+  const chatRows = document.querySelectorAll(
+    'div[aria-label="Chats"] [role="button"][tabindex="0"]'
+  );
+  if (!chatRows.length) {
+    alert("Silinecek DM bulunamadı veya DM kutusu yüklenmedi.");
+    return;
+  }
+  let i = 0;
+  function deleteNext() {
+    if (i >= chatRows.length) {
+      alert("Tüm DM'ler silindi veya silinecek başka sohbet kalmadı!");
+      return;
+    }
+    const chat = chatRows[i];
+    chat.click();
+    setTimeout(() => {
+      // 1. Adım: Konuşma Bilgileri (i) butonunu bul ve tıkla
+      const infoBtn = Array.from(
+        document.querySelectorAll(
+          'div[role="button"][tabindex="0"] svg[aria-label="Konuşma Bilgileri"]'
+        )
+      ).map((svg) => svg.closest('div[role="button"]'))[0];
+      if (infoBtn) {
+        infoBtn.click();
+        setTimeout(() => {
+          // 2. Adım: Sohbeti sil butonunu bul ve tıkla
+          const deleteBtn = Array.from(document.querySelectorAll("span")).find(
+            (el) => el.textContent.trim() === "Sohbeti sil"
+          );
+          if (deleteBtn) {
+            deleteBtn.closest('div[role="button"]').click();
+            setTimeout(() => {
+              // 3. Adım: Onay popup'ında Sil butonunu bul ve tıkla
+              const confirmBtn = Array.from(
+                document.querySelectorAll('div[role="dialog"] button')
+              ).find((el) => el.textContent.trim() === "Sil");
+              if (confirmBtn) {
+                confirmBtn.click();
+                setTimeout(() => {
+                  i++;
+                  deleteNext();
+                }, 2000);
+              } else {
+                i++;
+                deleteNext();
+              }
+            }, 800);
+          } else {
+            i++;
+            deleteNext();
+          }
+        }, 800);
+      } else {
+        i++;
+        deleteNext();
+      }
+    }, 800);
+  }
+  deleteNext();
+}
+
+// Sayfa değiştikçe butonu tekrar ekle
+setInterval(addBulkDeleteButton, 1500);
