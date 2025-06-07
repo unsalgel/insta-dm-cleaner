@@ -1,11 +1,9 @@
 // Instagram DM toplu silici
 
 function addBulkDeleteButton() {
-  // Sadece DM sayfasında çalışsın
   if (!window.location.pathname.startsWith("/direct/inbox")) return;
   if (document.querySelector("#bulk-delete-dm-btn")) return;
 
-  // DM listesinin üstüne ekle
   const dmList = document.querySelector('div[aria-label="Chats"]');
   if (!dmList) return;
 
@@ -36,17 +34,18 @@ function startBulkDelete() {
     )
   )
     return;
+  localStorage.setItem("autoBulkDeleteDMs", "1");
   bulkDeleteDMs();
 }
 
 function bulkDeleteDMs() {
   function deleteNext() {
-    // Her seferinde güncel DM listesini al
     const chatRows = document.querySelectorAll(
       'div[aria-label="Chats"] [role="button"][tabindex="0"]'
     );
     if (!chatRows.length) {
       alert("Tüm DM'ler silindi veya silinecek başka sohbet kalmadı!");
+      localStorage.removeItem("autoBulkDeleteDMs");
       return;
     }
     const chat = chatRows[0];
@@ -72,7 +71,6 @@ function bulkDeleteDMs() {
               if (confirmBtn) {
                 confirmBtn.click();
                 setTimeout(() => {
-                  // Burada tekrar deleteNext çağrılır, böylece güncel DM listesiyle devam eder
                   deleteNext();
                 }, 2000);
               } else {
@@ -91,5 +89,10 @@ function bulkDeleteDMs() {
   deleteNext();
 }
 
-// Sayfa değiştikçe butonu tekrar ekle
+if (localStorage.getItem("autoBulkDeleteDMs") === "1") {
+  setTimeout(() => {
+    bulkDeleteDMs();
+  }, 2000);
+}
+
 setInterval(addBulkDeleteButton, 1500);
