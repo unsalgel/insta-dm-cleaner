@@ -1,5 +1,3 @@
-// Instagram DM toplu silici
-
 function addBulkDeleteButton() {
   if (!window.location.pathname.startsWith("/direct/inbox")) return;
   if (document.querySelector("#bulk-delete-dm-btn")) return;
