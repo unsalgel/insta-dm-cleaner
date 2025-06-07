@@ -13,7 +13,7 @@ Bu Chrome eklentisi, Instagram web arayüzünde DM (Direct Message) kutunuzdaki 
 ## Kullanım
 
 1. Instagram web sitesinde DM (mesajlar) sayfasını açın
-2. Sağ üstte veya DM kutusunda "Tüm DM'leri Sil" butonunu göreceksiniz
+2. DM kutusunun üst kısmında "Tüm DM'leri Sil" butonunu göreceksiniz
 3. Butona tıklayarak tüm sohbetleri topluca silebilirsiniz
 
 ## Uyarı
