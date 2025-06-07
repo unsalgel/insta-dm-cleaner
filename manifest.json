@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Instagram DM Toplu Silici",
+  "name": "Instagram DM Cleaner",
   "version": "1.0",
   "description": "Instagram web arayüzünde DM (Direct Message) sohbetlerinizi toplu olarak silmenizi sağlar.",
   "permissions": ["webRequest", "downloads", "activeTab", "scripting"],
