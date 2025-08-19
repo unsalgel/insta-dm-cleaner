@@ -4,27 +4,148 @@
     <meta charset="UTF-8" />
     <style>
       body {
-        width: 300px;
-        padding: 20px;
-        font-family: Arial, sans-serif;
+        width: 380px;
+        min-height: 400px;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #fdf6f0 0%, #f7e7fa 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
-      h1 {
-        font-size: 18px;
-        color: #333;
-        margin-bottom: 10px;
+      .card {
+        background: #fff;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        padding: 36px 32px 22px 32px;
+        margin-top: 36px;
+        margin-bottom: 24px;
+        width: 340px;
+        max-width: 96vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-      p {
+      .logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.09);
+      }
+      .gradient-title {
+        font-size: 26px;
+        font-weight: bold;
+        background: linear-gradient(
+          90deg,
+          #fd5949 0%,
+          #d6249f 50%,
+          #285aeb 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        margin-bottom: 16px;
+        letter-spacing: 0.7px;
+        text-align: center;
+      }
+      .desc {
+        font-size: 16px;
+        color: #444;
+        text-align: center;
+        margin-bottom: 28px;
+        line-height: 1.7;
+      }
+      .dev-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .dev {
         font-size: 14px;
-        color: #666;
-        line-height: 1.4;
+        color: #888;
+        font-weight: 500;
+      }
+      .github-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: #285aeb;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .github-link:hover {
+        color: #d6249f;
+      }
+      .divider {
+        width: 80%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          #fd5949 0%,
+          #d6249f 50%,
+          #285aeb 100%
+        );
+        opacity: 0.12;
+        border: none;
+        margin: 18px 0 10px 0;
+      }
+      .footer {
+        margin-top: 0;
+        font-size: 13px;
+        color: #b6aebf;
+        text-align: center;
+        letter-spacing: 0.2px;
+      }
+      @media (max-width: 450px) {
+        body {
+          width: 100vw;
+        }
+        .card {
+          width: 98vw;
+          padding: 18px 2vw 12px 2vw;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Instagram DM Cleaner</h1>
-    <p>
-      Instagram DM kutunuzda, "Tüm DM'leri Sil" butonunu göreceksiniz. Sadece DM
-      sayfasında çalışır.
-    </p>
+    <div class="card">
+      <img src="icons/icon128.png" alt="Instagram DM Cleaner" class="logo" />
+      <div class="gradient-title">Instagram DM Cleaner</div>
+      <div class="desc">
+        Instagram DM kutunuzdaki sohbetleri tek tıkla topluca silin!<br />
+        "Tüm DM'leri Sil" butonu sadece DM sayfasında görünür.
+      </div>
+      <div class="dev-row">
+        <span class="dev">Geliştirici: Ünsal GEL</span>
+        <a
+          class="github-link"
+          href="https://github.com/unsalgel"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            height="18"
+            viewBox="0 0 16 16"
+            width="18"
+            fill="currentColor"
+            style="vertical-align: middle"
+          >
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.1 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.09.16 1.9.08 2.1.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+            ></path>
+          </svg>
+          GitHub
+        </a>
+      </div>
+      <hr class="divider" />
+      <div class="footer">Made with ❤️ by Ünsal GEL</div>
+    </div>
   </body>
 </html>
