@@ -2,25 +2,45 @@ function addBulkDeleteButton() {
   if (!window.location.pathname.startsWith("/direct/inbox")) return;
   if (document.querySelector("#bulk-delete-dm-btn")) return;
 
-  const dmList = document.querySelector('div[aria-label="Chats"]');
-  if (!dmList) return;
+  const dmList =
+    document.querySelector('div[aria-label="Chats"]') ||
+    document.querySelector('[data-testid="chat-list"]') ||
+    document.querySelector('div[role="main"] div[style*="overflow"]');
+
+  if (!dmList) {
+    console.log("DM listesi bulunamadı, tekrar deneniyor...");
+    return;
+  }
 
   const btn = document.createElement("button");
   btn.id = "bulk-delete-dm-btn";
   btn.innerText = "Tüm DM'leri Sil";
   btn.style.cssText = `
-        background: #ed4956;
+        background: linear-gradient(45deg, #ed4956, #d6249f);
         color: white;
         border: none;
-        border-radius: 6px;
-        padding: 10px 18px;
-        font-size: 16px;
-        font-weight: bold;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
         cursor: pointer;
         margin: 10px 0 10px 10px;
         z-index: 9999;
         display: block;
+        box-shadow: 0 2px 8px rgba(237, 73, 86, 0.3);
+        transition: all 0.2s ease;
     `;
+
+  btn.addEventListener("mouseenter", () => {
+    btn.style.transform = "translateY(-1px)";
+    btn.style.boxShadow = "0 4px 12px rgba(237, 73, 86, 0.4)";
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    btn.style.transform = "translateY(0)";
+    btn.style.boxShadow = "0 2px 8px rgba(237, 73, 86, 0.3)";
+  });
+
   btn.onclick = startBulkDelete;
   dmList.prepend(btn);
 }
@@ -28,63 +48,160 @@ function addBulkDeleteButton() {
 function startBulkDelete() {
   if (
     !confirm(
-      "Tüm DM'ler silinecek. Devam etmek istiyor musunuz? Bu işlem geri alınamaz!"
+      "⚠️ DİKKAT: Tüm DM'ler silinecek!\n\nBu işlem geri alınamaz. Devam etmek istiyor musunuz?"
     )
   )
     return;
+
   localStorage.setItem("autoBulkDeleteDMs", "1");
   bulkDeleteDMs();
 }
 
 function bulkDeleteDMs() {
+  let deleteCount = 0;
+
   function deleteNext() {
-    const chatRows = document.querySelectorAll(
-      'div[aria-label="Chats"] [role="button"][tabindex="0"]'
-    );
+    const chatRows =
+      document.querySelectorAll(
+        'div[aria-label="Chats"] [role="button"][tabindex="0"]'
+      ) ||
+      document.querySelectorAll('[data-testid="chat-list"] [role="button"]') ||
+      document.querySelectorAll(
+        'div[role="main"] div[style*="overflow"] [role="button"]'
+      );
+
     if (!chatRows.length) {
-      alert("Tüm DM'ler silindi veya silinecek başka sohbet kalmadı!");
+      alert(`✅ İşlem tamamlandı! ${deleteCount} sohbet silindi.`);
       localStorage.removeItem("autoBulkDeleteDMs");
       return;
     }
+
     const chat = chatRows[0];
     chat.click();
+
     setTimeout(() => {
-      const infoBtn = Array.from(
-        document.querySelectorAll(
-          'div[role="button"][tabindex="0"] svg[aria-label="Konuşma Bilgileri"]'
-        )
-      ).map((svg) => svg.closest('div[role="button"]'))[0];
+      const infoBtn = findInfoButton();
+
       if (infoBtn) {
         infoBtn.click();
         setTimeout(() => {
-          const deleteBtn = Array.from(document.querySelectorAll("span")).find(
-            (el) => el.textContent.trim() === "Sohbeti sil"
-          );
+          const deleteBtn = findDeleteButton();
           if (deleteBtn) {
-            deleteBtn.closest('div[role="button"]').click();
+            deleteBtn.click();
             setTimeout(() => {
-              const confirmBtn = Array.from(
-                document.querySelectorAll('div[role="dialog"] button')
-              ).find((el) => el.textContent.trim() === "Sil");
+              const confirmBtn = findConfirmButton();
               if (confirmBtn) {
                 confirmBtn.click();
+                deleteCount++;
                 setTimeout(() => {
                   deleteNext();
-                }, 2000);
+                }, 1600);
               } else {
+                console.log(
+                  "Onay butonu bulunamadı, sonraki sohbete geçiliyor..."
+                );
                 deleteNext();
               }
-            }, 800);
+            }, 700);
           } else {
+            console.log(
+              "Silme butonu bulunamadı, sonraki sohbete geçiliyor..."
+            );
             deleteNext();
           }
-        }, 800);
+        }, 700);
       } else {
+        console.log("Bilgi butonu bulunamadı, sonraki sohbete geçiliyor...");
         deleteNext();
       }
-    }, 800);
+    }, 700);
   }
+
   deleteNext();
+}
+
+function findInfoButton() {
+  const selectors = [
+    'div[role="button"][tabindex="0"] svg[aria-label="Konuşma Bilgileri"]',
+    'div[role="button"][tabindex="0"] svg[aria-label="Chat info"]',
+    'div[role="button"] svg[aria-label*="Bilgi"]',
+    'div[role="button"] svg[aria-label*="Info"]',
+    'div[role="button"] svg[data-testid="info"]',
+  ];
+
+  for (const selector of selectors) {
+    const svg = document.querySelector(selector);
+    if (svg) {
+      return svg.closest('div[role="button"]');
+    }
+  }
+
+  const buttons = document.querySelectorAll('div[role="button"]');
+  for (const button of buttons) {
+    if (
+      button.textContent.includes("Bilgi") ||
+      button.textContent.includes("Info")
+    ) {
+      return button;
+    }
+  }
+
+  return null;
+}
+
+function findDeleteButton() {
+  const selectors = [
+    'span:contains("Sohbeti sil")',
+    'span:contains("Delete chat")',
+    'button:contains("Sohbeti sil")',
+    'button:contains("Delete chat")',
+    'div[role="button"]:contains("Sohbeti sil")',
+    'div[role="button"]:contains("Delete chat")',
+  ];
+
+  const elements = document.querySelectorAll(
+    'span, button, div[role="button"]'
+  );
+  for (const element of elements) {
+    const text = element.textContent.trim();
+    if (
+      text === "Sohbeti sil" ||
+      text === "Delete chat" ||
+      text === "Sil" ||
+      text === "Delete"
+    ) {
+      return element.closest('div[role="button"]') || element;
+    }
+  }
+
+  return null;
+}
+
+function findConfirmButton() {
+  const selectors = [
+    'div[role="dialog"] button:contains("Sil")',
+    'div[role="dialog"] button:contains("Delete")',
+    'div[role="dialog"] button:contains("Onayla")',
+    'div[role="dialog"] button:contains("Confirm")',
+  ];
+
+  const dialog = document.querySelector('div[role="dialog"]');
+  if (dialog) {
+    const buttons = dialog.querySelectorAll("button");
+    for (const button of buttons) {
+      const text = button.textContent.trim();
+      if (
+        text === "Sil" ||
+        text === "Delete" ||
+        text === "Onayla" ||
+        text === "Confirm"
+      ) {
+        return button;
+      }
+    }
+  }
+
+  return null;
 }
 
 if (localStorage.getItem("autoBulkDeleteDMs") === "1") {
