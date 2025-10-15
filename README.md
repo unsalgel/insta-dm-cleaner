@@ -10,8 +10,9 @@ Bu Chrome eklentisi, Instagram web arayüzünde DM (Direct Message) kutunuzdaki 
 4. "Paketlenmemiş öğe yükle" butonuna tıklayın
 5. İndirdiğiniz proje klasörünü seçin
 
-> Alternatif olarak, eklentiyi direkt olarak Chrome Web Store’dan da yükleyebilirsiniz:  
-> [Instagram DM Cleaner](https://chromewebstore.google.com/detail/instagram-dm-cleaner/ahmmnkmhmidpggdipmmijaiphnaoeidh)
+> 🔗 Eklentiyi direkt olarak Chrome Web Store’dan da yükleyebilirsiniz:: [Instagram DM Cleaner](https://chromewebstore.google.com/detail/instagram-dm-cleaner/ahmmnkmhmidpggdipmmijaiphnaoeidh)
+
+
 
 ## Kullanım
 
