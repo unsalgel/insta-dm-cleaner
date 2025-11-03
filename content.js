@@ -2,10 +2,8 @@ function addBulkDeleteButton() {
   if (!window.location.pathname.startsWith("/direct/inbox")) return;
   if (document.querySelector("#bulk-delete-dm-btn")) return;
 
-  const dmList =
-    document.querySelector('div[aria-label="Chats"]') ||
-    document.querySelector('[data-testid="chat-list"]') ||
-    document.querySelector('div[role="main"] div[style*="overflow"]');
+  const dmList = document.querySelector('div[role="button"][tabindex="0"]')
+    ?.parentElement?.parentElement;
 
   if (!dmList) {
     console.log("DM listesi bulunamadı, tekrar deneniyor...");
@@ -42,7 +40,31 @@ function addBulkDeleteButton() {
   });
 
   btn.onclick = startBulkDelete;
-  dmList.prepend(btn);
+  const dmContainer = document.querySelector(
+    ".x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1n2onr6.x1ja2u2z.x1odjw0f.x1e4zzel.x1xzczws"
+  );
+
+  btn.style.width = "100%";
+  btn.style.marginLeft = "0";
+  btn.style.marginRight = "0";
+
+  if (dmContainer) {
+    dmContainer.insertBefore(btn, dmContainer.firstChild);
+  } else {
+    let mesajlarBasligi = Array.from(
+      document.querySelectorAll("span,div,h2,h3")
+    ).find((el) => el.textContent.trim() === "Mesajlar");
+    if (mesajlarBasligi) {
+      mesajlarBasligi.parentElement.insertBefore(
+        btn,
+        mesajlarBasligi.nextSibling
+      );
+    } else {
+      const dmList = document.querySelector('div[role="button"][tabindex="0"]')
+        ?.parentElement?.parentElement;
+      if (dmList) dmList.prepend(btn);
+    }
+  }
 }
 
 function startBulkDelete() {
