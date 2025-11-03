@@ -40,16 +40,36 @@ function addBulkDeleteButton() {
   });
 
   btn.onclick = startBulkDelete;
-  const dmContainer = document.querySelector(
+  const dmScope = document.querySelector(
     ".x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1n2onr6.x1ja2u2z.x1odjw0f.x1e4zzel.x1xzczws"
   );
+
+  const allButtons = document.querySelectorAll(
+    'div[role="button"][tabindex="0"]'
+  );
+  const chatRows = Array.from(allButtons).filter(function (el) {
+    if (el.closest('div[role="dialog"]')) return false; // modal içi değil
+    if (
+      dmScope &&
+      !el.closest(
+        ".x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1n2onr6.x1ja2u2z.x1odjw0f.x1e4zzel.x1xzczws"
+      )
+    )
+      return false;
+    const hasTime = Boolean(el.querySelector("abbr"));
+    const hasAvatar = Boolean(
+      el.querySelector('img[width="56"], img[height="56"]')
+    );
+    const isVisible = !!el.offsetParent;
+    return hasTime && hasAvatar && isVisible;
+  });
 
   btn.style.width = "100%";
   btn.style.marginLeft = "0";
   btn.style.marginRight = "0";
 
-  if (dmContainer) {
-    dmContainer.insertBefore(btn, dmContainer.firstChild);
+  if (dmScope) {
+    dmScope.insertBefore(btn, dmScope.firstChild);
   } else {
     let mesajlarBasligi = Array.from(
       document.querySelectorAll("span,div,h2,h3")
@@ -83,14 +103,9 @@ function bulkDeleteDMs() {
   let deleteCount = 0;
 
   function deleteNext() {
-    const chatRows =
-      document.querySelectorAll(
-        'div[aria-label="Chats"] [role="button"][tabindex="0"]'
-      ) ||
-      document.querySelectorAll('[data-testid="chat-list"] [role="button"]') ||
-      document.querySelectorAll(
-        'div[role="main"] div[style*="overflow"] [role="button"]'
-      );
+    const chatRows = document.querySelectorAll(
+      '.x13dflua.x19991ni div[role="button"][tabindex="0"]'
+    );
 
     if (!chatRows.length) {
       alert(`✅ İşlem tamamlandı! ${deleteCount} sohbet silindi.`);
