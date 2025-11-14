@@ -40,15 +40,20 @@ function addBulkDeleteButton() {
   });
 
   btn.onclick = startBulkDelete;
-  const dmScope = document.querySelector(
-    ".x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1n2onr6.x1ja2u2z.x1odjw0f.x1e4zzel.x1xzczws"
-  );
+
+  const dmScope =
+    document.querySelector(
+      ".xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1ja2u2z.x1pq812k.x1rohswg.xfk6m8.x1yqm8si.xjx87ck.xx8ngbg.xwo3gff.x1n2onr6.x1oyok0e.x1odjw0f.x1e4zzel.x1xzczws"
+    ) ||
+    document.querySelector(
+      ".x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x6ikm8r.x1n2onr6.x1ja2u2z.x1odjw0f.x1e4zzel.x1xzczws"
+    );
 
   const allButtons = document.querySelectorAll(
     'div[role="button"][tabindex="0"]'
   );
   const chatRows = Array.from(allButtons).filter(function (el) {
-    if (el.closest('div[role="dialog"]')) return false; // modal içi değil
+    if (el.closest('div[role="dialog"]')) return false;
     if (
       dmScope &&
       !el.closest(
