@@ -1,6 +1,10 @@
 // Popup.js — Speed Settings Controller
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Load version from manifest.json
+    const ver = document.getElementById("app-version");
+    if (ver) ver.textContent = "v" + chrome.runtime.getManifest().version;
+
     // Load saved speed setting
     chrome.storage.local.get(["dmCleanerSpeed"], (data) => {
         const speed = data.dmCleanerSpeed || "normal";
