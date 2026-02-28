@@ -1,4 +1,4 @@
-# 🗑️ Instagram DM Cleaner
+# Instagram DM Cleaner
 
 Instagram web arayüzünde DM (Direct Message) sohbetlerinizi toplu olarak silmenizi sağlayan Chrome eklentisi.
 
@@ -25,9 +25,10 @@ Instagram web arayüzünde DM (Direct Message) sohbetlerinizi toplu olarak silme
 
 1. **Hız seçin** — Eklenti ikonuna tıklayıp popup'tan silme hızını ayarlayın
 2. **DM sayfasını açın** — `instagram.com/direct/inbox/` adresine gidin
-3. **Silmeye başlayın** — **🗑️ Tüm DM'leri Sil** butonuna tıklayın
-4. **Gezinmeye devam edin** — Küçük bir pencere açılır, silme orada gerçekleşir
-5. **Kontrol edin** — Sağ alttaki panelden ilerlemeyi takip edin, ⏸️ ile duraklatın
+3. **Silmeye başlayın** — "Mesajlar" başlığının altındaki **Tüm DM'leri Sil** butonuna tıklayın
+4. **Onaylayın** — Açılan uyarı penceresinde **Silmeye Başla**'ya tıklayın
+5. **Gezinmeye devam edin** — Küçük bir pencere açılır, silme orada otomatik gerçekleşir
+6. **Kontrol edin** — Sağ alttaki panelden ilerlemeyi takip edin, duraklat/devam et butonlarını kullanın
 
 ## ⚡ Hız Modları
 
@@ -41,7 +42,7 @@ Instagram web arayüzünde DM (Direct Message) sohbetlerinizi toplu olarak silme
 
 - Bu işlem **geri alınamaz**. Silinen sohbetler kurtarılamaz.
 - **Hızlı mod** kullanırken Instagram bot algılaması yapabilir. Güvenli mod önerilir.
-- Instagram arayüzü değişirse eklenti güncellenmesi gerekebilir.
+- Silme işlemi sırasında açılan pencereyi **kapatmayın**.
 - Sadece kendi hesabınızda çalışır.
 
 ## 📁 Proje Yapısı
@@ -50,11 +51,21 @@ Instagram web arayüzünde DM (Direct Message) sohbetlerinizi toplu olarak silme
 ├── manifest.json      # Chrome Extension manifest (v3)
 ├── background.js      # Service worker — pencere yönetimi
 ├── content.js         # Ana mantık — UI + silme döngüsü
+├── api_bridge.js      # Sayfa bağlamında API/DOM köprüsü (MAIN world)
 ├── popup.html         # Eklenti popup arayüzü
 ├── popup.js           # Popup etkileşim scripti
 ├── icons/             # Eklenti ikonları
 └── README.md
 ```
+
+## 🔧 Teknik Mimari
+
+Eklenti **hibrit** bir yaklaşım kullanır:
+
+- **Sohbet listeleme** → Instagram API (`/api/v1/direct_v2/inbox/`)
+- **Sohbet silme** → DOM otomasyonu (tıklama simülasyonu)
+- **api_bridge.js** → `world: "MAIN"` ile sayfanın kendi JS bağlamında çalışır, tam cookie/session erişimi sağlar
+- **content.js** → Chrome extension API'lerine erişir, `window.postMessage` ile bridge'e iletişim kurar
 
 ## 🛠️ Geliştirici
 
